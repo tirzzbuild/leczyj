@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0416">
+<title>KILLUA — LEXZY DEV</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0416; color: #fff; font-family: -apple-system, 'Segoe UI', Roboto, sans-serif; min-height: 100vh; }
+
+  /* ===== LOGIN / REGISTER PAGE ===== */
+  .auth-page {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; position: relative; overflow: hidden;
+  }
+  .auth-page::before {
+    content: ''; position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(139,61,255,0.35), transparent 70%);
+    top: -200px; left: -200px; pointer-events: none;
+    animation: floatBg 8s ease-in-out infinite;
+  }
+  .auth-page::after {
+    content: ''; position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,47,160,0.3), transparent 70%);
+    bottom: -200px; right: -200px; pointer-events: none;
+    animation: floatBg 8s ease-in-out infinite reverse;
+  }
+  @keyframes floatBg {
+    0%, 100% { transform: scale(1) translate(0, 0); }
+    50% { transform: scale(1.15) translate(20px, -20px); }
+  }
+  .auth-box {
+    width: 100%; max-width: 380px;
+    padding: 32px 24px 28px; border-radius: 26px;
+    background: linear-gradient(135deg, #2a0d4d 0%, #1a0633 50%, #12042a 100%);
+    border: 1px solid rgba(179,102,255,0.35);
+    box-shadow: 0 12px 40px rgba(139,61,255,0.35);
+    text-align: center; position: relative; z-index: 1;
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .logo {
+    width: 84px; height: 84px; margin: 0 auto 18px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #b366ff, #4a0d8c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px; box-shadow: 0 0 28px rgba(139,61,255,0.9);
+    border: 3px solid rgba(255,255,255,0.15);
+    position: relative; animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 28px rgba(139,61,255,0.9); }
+    50% { box-shadow: 0 0 40px rgba(179,102,255,1); }
+  }
+  .title {
+    font-size: 23px; font-weight: 800; letter-spacing: 2px;
+    background: linear-gradient(90deg, #b366ff, #ff2fa0, #b366ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 6px;
+    animation: shine 3s linear infinite;
+  }
+  @keyframes shine { to { background-position: 200% center; } }
+  .subtitle {
+    font-size: 11px; letter-spacing: 2.5px;
+    color: #8a7aa8; margin-bottom: 24px; font-weight: 600;
+  }
+  .form-group { margin-bottom: 14px; text-align: left; }
+  .form-group label {
+    display: block; font-size: 10px; letter-spacing: 1.5px;
+    color: #8a7aa8; margin-bottom: 6px; font-weight: 700;
+  }
+  .form-group input {
+    width: 100%; background: #050505;
+    border: 1.5px solid rgba(139,61,255,0.35);
+    color: #fff; padding: 13px 14px;
+    font-family: inherit; font-size: 13px;
+    border-radius: 10px; outline: none; transition: 0.25s;
+  }
+  .form-group input:focus {
+    border-color: #b366ff; background: #0a0416;
+    box-shadow: 0 0 0 3px rgba(139,61,255,0.15), 0 0 20px rgba(139,61,255,0.4);
+  }
+  .btn-primary {
+    width: 100%; padding: 14px; margin-top: 8px;
+    background: linear-gradient(90deg, #8b3dff, #ff2fa0, #8b3dff);
+    background-size: 200% auto;
+    border: none; color: #fff; font-family: inherit;
+    font-size: 14px; font-weight: 800; letter-spacing: 2px;
+    border-radius: 12px; cursor: pointer;
+    box-shadow: 0 6px 24px rgba(139,61,255,0.55);
+    transition: 0.25s;
+  }
+  .btn-primary:hover {
+    background-position: right center;
+    box-shadow: 0 8px 30px rgba(139,61,255,0.75);
+    transform: translateY(-1px);
+  }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-primary.loading::after {
+    content: ''; display: inline-block;
+    width: 12px; height: 12px; margin-left: 8px;
+    border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+    border-radius: 50%; animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .msg {
+    margin-top: 14px; padding: 11px 14px;
+    border-radius: 10px; font-size: 12px; font-weight: 700;
+    text-align: center; display: none;
+  }
+  .msg.err { display: block; background: rgba(255,51,68,0.15); border: 1px solid rgba(255,51,68,0.5); color: #ff5566; }
+  .msg.ok  { display: block; background: rgba(77,255,136,0.15); border: 1px solid rgba(77,255,136,0.5); color: #4dff88; }
+  .msg.info { display: block; background: rgba(77,168,255,0.15); border: 1px solid rgba(77,168,255,0.5); color: #4da6ff; }
+  .link-btn {
+    display: block; margin-top: 14px;
+    font-size: 11px; color: #4da6ff;
+    text-decoration: none; font-weight: 700; letter-spacing: 1px;
+    padding: 8px; border-radius: 8px; cursor: pointer;
+    transition: 0.2s; text-align: center;
+    background: none; border: none; width: 100%; font-family: inherit;
+  }
+  .link-btn:hover { color: #b366ff; background: rgba(139,61,255,0.08); }
+  .footer {
+    margin-top: 20px; padding-top: 14px;
+    border-top: 1px solid rgba(139,61,255,0.15);
+    font-size: 10px; color: #5a4a70;
+    letter-spacing: 1.5px; font-weight: 600;
+  }
+  .footer b { color: #b366ff; }
+
+  /* ===== PANEL PAGE ===== */
+  .panel-page { display: none; min-height: 100vh; padding: 16px 18px 90px; }
+  .panel-page.active { display: block; }
+  .auth-page.hidden { display: none; }
+  .sub-page { display: none; padding: 0; }
+  .sub-page.active { display: block; }
+  .header { display: flex; align-items: center; gap: 12px; padding: 8px 0 20px; }
+  .avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #b366ff, #4a0d8c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; box-shadow: 0 0 14px rgba(139,61,255,0.7);
+  }
+  .avatar.gold { background: radial-gradient(circle at 30% 30%, #ffc83c, #8a4a0d); box-shadow: 0 0 14px rgba(255,200,60,0.7); }
+  .greet { font-size: 10px; letter-spacing: 1.5px; color: #b366ff; font-weight: 600; }
+  .greet.gold { color: #ffc83c; }
+  .name { font-size: 17px; font-weight: 800; letter-spacing: 1px; margin-top: 2px; }
+  .main-card {
+    padding: 18px; border-radius: 22px;
+    background: linear-gradient(135deg, #2a0d4d, #1a0633, #12042a);
+    border: 1px solid rgba(179,102,255,0.25);
+    box-shadow: 0 8px 30px rgba(139,61,255,0.25);
+    margin-bottom: 22px;
+  }
+  .main-card.gold {
+    background: linear-gradient(135deg, #4a350d, #2a1a06, #1a0f04);
+    border-color: rgba(255,200,60,0.3);
+    box-shadow: 0 8px 30px rgba(255,200,60,0.25);
+  }
+  .online-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    color: #b366ff; border: 1px solid rgba(179,102,255,0.5);
+    padding: 4px 10px; border-radius: 20px;
+    background: rgba(139,61,255,0.1);
+  }
+  .online-badge.gold { color: #ffc83c; border-color: rgba(255,200,60,0.5); background: rgba(255,200,60,0.1); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #b366ff; box-shadow: 0 0 6px #b366ff; }
+  .online-badge.gold .dot { background: #ffc83c; box-shadow: 0 0 6px #ffc83c; }
+  .session-label { font-size: 10px; letter-spacing: 1.5px; color: #8a7aa8; margin-top: 16px; font-weight: 600; }
+  .session-ver { font-size: 30px; font-weight: 800; letter-spacing: 1px; margin-top: 2px; text-shadow: 0 0 20px rgba(179,102,255,0.5); }
+  .stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 18px; }
+  .stat { background: rgba(10,4,22,0.7); border: 1px solid rgba(139,61,255,0.2); border-radius: 12px; padding: 10px 8px; }
+  .stat .lbl { font-size: 9px; color: #8a7aa8; letter-spacing: 1px; font-weight: 600; }
+  .stat .val { font-size: 17px; font-weight: 800; margin-top: 4px; }
+  .val.blue { color: #4da6ff; }
+  .val.pink { color: #ff2fa0; }
+  .val.green { color: #4dff88; }
+  .val.gold { color: #ffc83c; }
+  .section-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 800; letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .section-title::before {
+    content: ''; width: 3px; height: 14px; border-radius: 2px;
+    background: linear-gradient(180deg, #b366ff, #ff2fa0);
+    box-shadow: 0 0 8px #8b3dff;
+  }
+  .section-title.cyan::before { background: linear-gradient(180deg, #4de6ff, #8b3dff); box-shadow: 0 0 8px #4de6ff; }
+  .section-title.gold::before { background: linear-gradient(180deg, #ffc83c, #ff8a3c); box-shadow: 0 0 8px #ffc83c; }
+  .account-card { background: #150828; border: 1px solid rgba(139,61,255,0.2); border-radius: 18px; padding: 14px 16px; margin-bottom: 18px; }
+  .account-card.gold { border-color: rgba(255,200,60,0.25); }
+  .account-row {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; padding: 8px 0;
+    border-bottom: 1px solid rgba(139,61,255,0.1);
+  }
+  .account-card.gold .account-row { border-bottom-color: rgba(255,200,60,0.1); }
+  .account-row:last-child { border-bottom: none; }
+  .account-row .k { color: #8a7aa8; }
+  .account-row .v { font-weight: 700; }
+  .vip-badge { background: linear-gradient(90deg, #8b3dff, #ff2fa0); padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; }
+  .admin-pill { background: linear-gradient(90deg, #ffc83c, #ff8a3c); padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 800; color: #1a0633; }
+
+  .form-group-panel { margin-bottom: 14px; }
+  .form-group-panel label { display: block; font-size: 11px; letter-spacing: 1px; color: #8a7aa8; margin-bottom: 6px; font-weight: 700; }
+  .form-group-panel input, .form-group-panel select, .form-group-panel textarea {
+    width: 100%; background: #050505;
+    border: 1px solid rgba(139,61,255,0.4);
+    color: #fff; padding: 12px; font-family: inherit;
+    font-size: 13px; border-radius: 10px; outline: none;
+  }
+  .form-group-panel input:focus, .form-group-panel select:focus, .form-group-panel textarea:focus {
+    border-color: #b366ff; box-shadow: 0 0 14px rgba(139,61,255,0.5);
+  }
+  .btn-exec {
+    width: 100%; padding: 14px;
+    background: linear-gradient(90deg, #8b3dff, #ff2fa0);
+    border: none; color: #fff; font-family: inherit;
+    font-size: 14px; font-weight: 800; letter-spacing: 2px;
+    border-radius: 12px; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(139,61,255,0.5);
+    text-align: center; display: block; transition: 0.2s;
+  }
+  .btn-exec:active { transform: scale(0.97); }
+  .btn-exec:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-logout {
+    display: block; width: 100%; padding: 14px;
+    background: rgba(255,51,68,0.15); border: 1px solid rgba(255,51,68,0.5);
+    color: #ff5566; font-family: inherit; font-size: 14px; font-weight: 800;
+    letter-spacing: 2px; border-radius: 12px; cursor: pointer; text-align: center;
+  }
+  .log-box {
+    border: 1px dashed rgba(139,61,255,0.4);
+    border-radius: 12px; padding: 12px;
+    min-height: 120px; max-height: 220px; overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 11px; background: #06020f;
+    line-height: 1.5; white-space: pre-wrap; word-break: break-all;
+  }
+  .log-info { color: #b366ff; }
+  .log-ok   { color: #4dff88; }
+  .log-err  { color: #ff5566; }
+  .log-warn { color: #ffcc44; }
+
+  .profile-hero {
+    padding: 24px 18px; border-radius: 22px;
+    background: linear-gradient(135deg, #2a0d4d, #1a0633, #12042a);
+    border: 1px solid rgba(179,102,255,0.25);
+    text-align: center; margin-bottom: 18px;
+  }
+  .profile-hero.gold {
+    background: linear-gradient(135deg, #4a350d, #2a1a06, #1a0f04);
+    border-color: rgba(255,200,60,0.35);
+  }
+  .profile-avatar {
+    width: 90px; height: 90px; margin: 0 auto; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #b366ff, #4a0d8c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 42px; box-shadow: 0 0 25px rgba(139,61,255,0.9);
+    border: 3px solid rgba(255,255,255,0.15);
+  }
+  .profile-avatar.gold { background: radial-gradient(circle at 30% 30%, #ffc83c, #8a4a0d); }
+  .profile-name {
+    font-size: 22px; font-weight: 800; letter-spacing: 1px;
+    margin-top: 14px;
+    background: linear-gradient(90deg, #b366ff, #ff2fa0);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .profile-name.gold {
+    background: linear-gradient(90deg, #ffc83c, #ff8a3c);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .profile-role { font-size: 11px; letter-spacing: 2px; color: #b366ff; margin-top: 4px; font-weight: 700; }
+  .profile-role.gold { color: #ffc83c; }
+  .profile-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+  .p-stat { background: #150828; border: 1px solid rgba(139,61,255,0.2); border-radius: 14px; padding: 12px 8px; text-align: center; }
+  .p-stat .num { font-size: 20px; font-weight: 800; }
+  .p-stat .lbl { font-size: 9px; color: #8a7aa8; letter-spacing: 1px; margin-top: 3px; font-weight: 600; }
+  .bio-box { background: #150828; border: 1px solid rgba(139,61,255,0.2); border-radius: 16px; padding: 14px 16px; margin-bottom: 18px; }
+  .bio-title { font-size: 10px; color: #8a7aa8; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 8px; }
+  .bio-text { font-size: 12px; line-height: 1.6; color: #d8c8f0; }
+
+  .vip-banner {
+    padding: 22px 18px; border-radius: 22px;
+    background: linear-gradient(135deg, #4a0d8c, #2a0d4d, #1a0633);
+    border: 1px solid rgba(255,200,60,0.4);
+    text-align: center; margin-bottom: 20px;
+  }
+  .vip-crown { font-size: 52px; filter: drop-shadow(0 0 20px rgba(255,200,60,0.9)); }
+  .vip-title {
+    font-size: 22px; font-weight: 800; letter-spacing: 2px; margin-top: 8px;
+    background: linear-gradient(90deg, #ffc83c, #ff2fa0, #b366ff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .vip-sub { font-size: 11px; letter-spacing: 1px; color: #8a7aa8; margin-top: 6px; }
+  .paket { background: #150828; border: 1.5px solid rgba(139,61,255,0.25); border-radius: 18px; padding: 16px; margin-bottom: 12px; position: relative; }
+  .paket.populer { border-color: #ffc83c; box-shadow: 0 0 20px rgba(255,200,60,0.3); }
+  .paket.populer::after { content: 'POPULER'; position: absolute; top: -10px; right: 14px; font-size: 9px; font-weight: 800; letter-spacing: 1.5px; padding: 3px 10px; border-radius: 20px; background: linear-gradient(90deg, #ffc83c, #ff8a3c); color: #1a0633; }
+  .paket-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .paket-name { font-size: 16px; font-weight: 800; }
+  .paket-name.gold { color: #ffc83c; }
+  .paket-name.pink { color: #ff2fa0; }
+  .paket-name.purple { color: #b366ff; }
+  .paket-price .harga { font-size: 18px; font-weight: 800; color: #b366ff; text-align: right; }
+  .paket-price .durasi { font-size: 10px; color: #8a7aa8; margin-top: 2px; text-align: right; }
+  .paket-fitur { list-style: none; margin: 12px 0; }
+  .paket-fitur li { font-size: 11px; color: #d8c8f0; padding: 5px 0 5px 20px; position: relative; }
+  .paket-fitur li::before { content: '✓'; position: absolute; left: 0; color: #4dff88; font-weight: 800; }
+  .paket-fitur li.no { color: #5a4a70; }
+  .paket-fitur li.no::before { content: '✕'; color: #ff3344; }
+  .btn-beli {
+    display: block; width: 100%; padding: 11px; text-align: center;
+    border-radius: 10px; font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
+    border: 2px solid #8b3dff; background: transparent; color: #b366ff;
+    text-decoration: none; cursor: pointer;
+  }
+  .btn-beli.gold { border-color: #ffc83c; background: linear-gradient(90deg, #ffc83c, #ff8a3c); color: #1a0633; }
+
+  .tg-card {
+    padding: 18px; border-radius: 22px;
+    background: linear-gradient(135deg, #0d3a6a, #1a2a5a, #0a1a3a);
+    border: 1px solid rgba(77,168,255,0.4);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 14px;
+    text-decoration: none; color: #fff;
+  }
+  .tg-ico { width: 54px; height: 54px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #4da6ff, #0d4a8c); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+  .tg-info { flex: 1; }
+  .tg-label { font-size: 9px; letter-spacing: 2px; color: #4da6ff; font-weight: 800; }
+  .tg-title { font-size: 16px; font-weight: 800; margin-top: 3px; }
+  .tg-user { font-size: 11px; color: #8a7aa8; margin-top: 2px; }
+  .tg-btn { padding: 8px 12px; border-radius: 10px; background: linear-gradient(90deg, #4da6ff, #8b3dff); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 1px; flex-shrink: 0; }
+
+  .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .admin-stat { background: #150828; border: 1px solid rgba(255,200,60,0.25); border-radius: 16px; padding: 14px; }
+  .admin-stat .a-ico { font-size: 22px; }
+  .admin-stat .a-val { font-size: 24px; font-weight: 800; margin-top: 6px; color: #ffc83c; text-shadow: 0 0 10px rgba(255,200,60,0.5); }
+  .admin-stat .a-lbl { font-size: 9px; color: #8a7aa8; letter-spacing: 1px; margin-top: 2px; font-weight: 600; }
+  .admin-menu { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .admin-menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: #150828; border: 1px solid rgba(255,200,60,0.2); border-radius: 14px; text-decoration: none; color: #fff; cursor: pointer; }
+  .admin-menu-item .mi-ico { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, rgba(255,200,60,0.25), rgba(255,138,60,0.15)); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .admin-menu-item .mi-text { flex: 1; }
+  .admin-menu-item .mi-title { font-size: 13px; font-weight: 800; }
+  .admin-menu-item .mi-desc { font-size: 10px; color: #8a7aa8; margin-top: 2px; }
+  .admin-menu-item .mi-arrow { color: #8a7aa8; font-size: 14px; }
+  .table-user { background: #150828; border: 1px solid rgba(255,200,60,0.2); border-radius: 16px; padding: 4px 0; overflow: hidden; }
+  .user-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid rgba(255,200,60,0.08); }
+  .user-row:last-child { border-bottom: none; }
+  .u-avatar { width: 36px; height: 36px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #b366ff, #4a0d8c); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .u-info { flex: 1; }
+  .u-name { font-size: 13px; font-weight: 800; }
+  .u-meta { font-size: 10px; color: #8a7aa8; margin-top: 2px; }
+  .u-status { font-size: 9px; padding: 3px 8px; border-radius: 10px; font-weight: 800; }
+  .u-status.aktif { background: rgba(77,255,136,0.15); color: #4dff88; border: 1px solid rgba(77,255,136,0.4); }
+  .u-status.pending { background: rgba(255,200,60,0.15); color: #ffc83c; border: 1px solid rgba(255,200,60,0.4); }
+
+  .bottom-nav {
+    position: fixed; bottom: 14px;
+    left: 50%; transform: translateX(-50%);
+    width: calc(100% - 32px); max-width: 420px;
+    background: rgba(15,6,30,0.95);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(139,61,255,0.3);
+    border-radius: 22px;
+    display: flex; justify-content: space-around;
+    padding: 10px 6px;
+    box-shadow: 0 10px 30px rgba(139,61,255,0.3);
+    z-index: 50;
+  }
+  .bottom-nav.gold { border-color: rgba(255,200,60,0.3); box-shadow: 0 10px 30px rgba(255,200,60,0.3); }
+  .nav-item { flex: 1; text-align: center; font-size: 9px; letter-spacing: 1px; color: #8a7aa8; font-weight: 700; padding: 6px 0; cursor: pointer; }
+  .nav-item .ico { display: block; font-size: 18px; margin-bottom: 3px; }
+  .nav-item.active { color: #b366ff; text-shadow: 0 0 10px #b366ff; }
+  .nav-item.crown { color: #ffc83c; }
+  .nav-item.crown.active { color: #ffc83c; text-shadow: 0 0 14px #ffc83c; }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN PAGE ============ -->
+<div class="auth-page" id="pageLogin">
+  <div class="auth-box">
+    <div class="logo">⚡</div>
+    <div class="title">KILLUA PANEL</div>
+    <div class="subtitle">LOGIN UNTUK MASUK</div>
+
+    <div class="form-group">
+      <label>USERNAME</label>
+      <input type="text" id="loginUser" placeholder="Masukkan username" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label>PASSWORD</label>
+      <input type="password" id="loginPass" placeholder="Masukkan password" autocomplete="off">
+    </div>
+
+    <button class="btn-primary" id="btnLogin" onclick="doLogin()">MASUK</button>
+
+    <div class="msg" id="loginMsg"></div>
+
+    <button class="link-btn" onclick="showRegister()">← Belum punya akun? Daftar</button>
+
+    <div class="footer">© DEVELOPED BY <b>LEXZY DEV</b></div>
+  </div>
+</div>
+
+<!-- ============ REGISTER PAGE ============ -->
+<div class="auth-page" id="pageRegister" style="display:none;">
+  <div class="auth-box">
+    <div class="logo">📝</div>
+    <div class="title">DAFTAR AKUN</div>
+    <div class="subtitle">KILLUA PANEL</div>
+
+    <div class="form-group">
+      <label>USERNAME</label>
+      <input type="text" id="regUser" placeholder="Min. 3 karakter" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label>PASSWORD</label>
+      <input type="password" id="regPass" placeholder="Min. 6 karakter" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label>KONFIRMASI PASSWORD</label>
+      <input type="password" id="regPass2" placeholder="Ulangi password" autocomplete="off">
+    </div>
+
+    <button class="btn-primary" id="btnReg" onclick="doRegister()">DAFTAR</button>
+
+    <div class="msg" id="regMsg"></div>
+
+    <button class="link-btn" onclick="showLogin()">← Sudah punya akun? Login</button>
+
+    <div class="footer">© DEVELOPED BY <b>LEXZY DEV</b></div>
+  </div>
+</div>
+
+<!-- ============ PANEL USER ============ -->
+<div class="panel-page" id="panelUser">
+  <div class="sub-page active" id="u-home">
+    <div class="header">
+      <div class="avatar">⚡</div>
+      <div>
+        <div class="greet">WELCOME BACK</div>
+        <div class="name" id="uHeaderName">USER</div>
+      </div>
+    </div>
+
+    <div class="main-card">
+      <span class="online-badge"><span class="dot"></span>SYSTEM ONLINE</span>
+      <div class="session-label">CURRENT SESSION</div>
+      <div class="session-ver">V1.00</div>
+      <div class="stats">
+        <div class="stat"><div class="lbl">USERS</div><div class="val blue">0</div></div>
+        <div class="stat"><div class="lbl">PING</div><div class="val pink">--</div></div>
+        <div class="stat"><div class="lbl">EXP</div><div class="val green">0D</div></div>
+      </div>
+    </div>
+
+    <div class="section-title">ACCOUNT INFO</div>
+    <div class="account-card">
+      <div class="account-row"><span class="k">USERNAME</span><span class="v" id="uInfoUsername">-</span></div>
+      <div class="account-row"><span class="k">ACCESS LEVEL</span><span class="v vip-badge">VIP</span></div>
+      <div class="account-row"><span class="k">DEVELOPER</span><span class="v" style="color:#b366ff;">LEXZY DEV</span></div>
+      <div class="account-row"><span class="k">STATUS</span><span class="v" style="color:#4dff88;">AKTIF</span></div>
+    </div>
+
+    <div class="section-title cyan">CHAT ADMIN</div>
+    <a class="tg-card" href="https://t.me/Lexzy_real" target="_blank">
+      <div class="tg-ico">✈️</div>
+      <div class="tg-info">
+        <div class="tg-label">TELEGRAM</div>
+        <div class="tg-title">Lexzy Dev</div>
+        <div class="tg-user">@Lexzy_real</div>
+      </div>
+      <div class="tg-btn">CHAT</div>
+    </a>
+  </div>
+
+  <div class="sub-page" id="u-bug">
+    <div class="header">
+      <div class="avatar">🤖</div>
+      <div>
+        <div class="greet">MODUL</div>
+        <div class="name">BUG TOOL</div>
+      </div>
+    </div>
+
+    <div class="section-title">KONFIGURASI</div>
+    <div class="form-group-panel">
+      <label>TARGET</label>
+      <input id="bugTarget" type="text" placeholder="628xxxxxxxxxx">
+    </div>
+    <div class="form-group-panel">
+      <label>METODE BUG</label>
+      <select id="bugMethod">
+        <option>Freeze Android</option>
+        <option>Crash iOS</option>
+        <option>Blank UI</option>
+        <option>Force Close</option>
+        <option>Call Spam</option>
+        <option>Crash Group</option>
+      </select>
+    </div>
+    <div class="form-group-panel">
+      <label>JUMLAH</label>
+      <input id="bugAmount" type="number" value="1" min="1" max="50">
+    </div>
+    <button class="btn-exec" id="btnBugRun" onclick="runBug()">EKSEKUSI</button>
+
+    <div class="section-title" style="margin-top:22px;">LOG OUTPUT</div>
+    <div class="log-box" id="logBox"><span class="log-info">[•] Sistem siap. Menunggu perintah...</span></div>
+  </div>
+
+  <div class="sub-page" id="u-profile">
+    <div class="header">
+      <div class="avatar">👤</div>
+      <div>
+        <div class="greet">AKUN</div>
+        <div class="name">PROFILE</div>
+      </div>
+    </div>
+
+    <div class="profile-hero">
+      <div class="profile-avatar">⚡</div>
+      <div class="profile-name" id="uProfileName">USER</div>
+      <div class="profile-role">VIP MEMBER</div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="p-stat"><div class="num" style="color:#4da6ff;">128</div><div class="lbl">TOTAL BUG</div></div>
+      <div class="p-stat"><div class="num" style="color:#4dff88;">96%</div><div class="lbl">SUKSES</div></div>
+      <div class="p-stat"><div class="num" style="color:#ff2fa0;">30D</div><div class="lbl">MASA AKTIF</div></div>
+    </div>
+
+    <div class="account-card">
+      <div class="account-row"><span class="k">USERNAME</span><span class="v" id="uProfileUsername">-</span></div>
+      <div class="account-row"><span class="k">DEVELOPER</span><span class="v" style="color:#b366ff;">LEXZY DEV</span></div>
+      <div class="account-row"><span class="k">STATUS</span><span class="v" style="color:#4dff88;">AKTIF</span></div>
+    </div>
+
+    <div class="bio-box">
+      <div class="bio-title">BIO</div>
+      <div class="bio-text">Pengguna VIP panel Killua. Developer: <b style="color:#b366ff;">Lexzy Dev</b>.</div>
+    </div>
+
+    <button class="btn-logout" onclick="doLogout()">LOGOUT</button>
+  </div>
+
+  <div class="sub-page" id="u-vip">
+    <div class="header">
+      <div class="avatar gold">👑</div>
+      <div>
+        <div class="greet gold">MEMBER</div>
+        <div class="name">VIP ACCESS</div>
+      </div>
+    </div>
+
+    <div class="vip-banner">
+      <div class="vip-crown">👑</div>
+      <div class="vip-title">KILLUA VIP</div>
+      <div class="vip-sub">UPGRADE UNTUK AKSES PENUH</div>
+    </div>
+
+    <div class="section-title gold">DAFTAR PAKET</div>
+
+    <div class="paket">
+      <div class="paket-head">
+        <div class="paket-name purple">BASIC</div>
+        <div class="paket-price"><div class="harga">Rp 10K</div><div class="durasi">7 HARI</div></div>
+      </div>
+      <ul class="paket-fitur">
+        <li>Akses Bug Tool dasar</li>
+        <li>Limit 10 eksekusi/hari</li>
+        <li class="no">Priority support</li>
+      </ul>
+      <a class="btn-beli" href="https://t.me/Lexzy_real" target="_blank">PILIH PAKET</a>
+    </div>
+
+    <div class="paket populer">
+      <div class="paket-head">
+        <div class="paket-name gold">PREMIUM</div>
+        <div class="paket-price"><div class="harga">Rp 25K</div><div class="durasi">30 HARI</div></div>
+      </div>
+      <ul class="paket-fitur">
+        <li>Semua metode bug terbuka</li>
+        <li>Limit 50 eksekusi/hari</li>
+        <li>Priority support</li>
+      </ul>
+      <a class="btn-beli gold" href="https://t.me/Lexzy_real" target="_blank">PILIH PAKET</a>
+    </div>
+
+    <div class="paket">
+      <div class="paket-head">
+        <div class="paket-name pink">LIFETIME</div>
+        <div class="paket-price"><div class="harga">Rp 75K</div><div class="durasi">SELAMANYA</div></div>
+      </div>
+      <ul class="paket-fitur">
+        <li>Semua metode bug terbuka</li>
+        <li>Unlimited eksekusi</li>
+        <li>Priority support 24/7</li>
+      </ul>
+      <a class="btn-beli" href="https://t.me/Lexzy_real" target="_blank">PILIH PAKET</a>
+    </div>
+  </div>
+
+  <div class="bottom-nav" id="navUser">
+    <a class="nav-item active" data-u="u-home"><span class="ico">🏠</span>HOME</a>
+    <a class="nav-item" data-u="u-bug"><span class="ico">🤖</span>BUG</a>
+    <a class="nav-item" data-u="u-profile"><span class="ico">👤</span>PROFILE</a>
+    <a class="nav-item crown" data-u="u-vip"><span class="ico">👑</span>VIP</a>
+  </div>
+</div>
+
+<!-- ============ PANEL ADMIN ============ -->
+<div class="panel-page" id="panelAdmin">
+  <div class="header">
+    <div class="avatar gold">👑</div>
+    <div>
+      <div class="greet gold">ADMIN PANEL</div>
+      <div class="name" id="aHeaderName">LEXZY DEV</div>
+    </div>
+  </div>
+
+  <div class="main-card gold">
+    <span class="online-badge gold"><span class="dot"></span>ADMIN ONLINE</span>
+    <div class="session-label">ADMIN SESSION</div>
+    <div class="session-ver">V1.00</div>
+    <div class="stats">
+      <div class="stat"><div class="lbl">TOTAL USERS</div><div class="val gold" id="aTotalUsers">0</div></div>
+      <div class="stat"><div class="lbl">AKTIF</div><div class="val green" id="aTotalAktif">0</div></div>
+      <div class="stat"><div class="lbl">BANNED</div><div class="val pink">0</div></div>
+    </div>
+  </div>
+
+  <div class="section-title gold">STATISTIK</div>
+  <div class="admin-grid">
+    <div class="admin-stat"><div class="a-ico">👥</div><div class="a-val" id="aStatTotal">0</div><div class="a-lbl">TOTAL USER</div></div>
+    <div class="admin-stat"><div class="a-ico">💰</div><div class="a-val">Rp 0</div><div class="a-lbl">PENDAPATAN</div></div>
+    <div class="admin-stat"><div class="a-ico">🤖</div><div class="a-val">0</div><div class="a-lbl">TOTAL BUG</div></div>
+    <div class="admin-stat"><div class="a-ico">📊</div><div class="a-val">100%</div><div class="a-lbl">UPTIME</div></div>
+  </div>
+
+  <div class="section-title gold">MENU ADMIN</div>
+  <div class="admin-menu">
+    <a class="admin-menu-item" onclick="alert('Fitur segera hadir')">
+      <div class="mi-ico">👥</div>
+      <div class="mi-text"><div class="mi-title">KELOLA USER</div><div class="mi-desc">Tambah, hapus, edit user</div></div>
+      <div class="mi-arrow">›</div>
+    </a>
+    <a class="admin-menu-item" onclick="alert('Fitur segera hadir')">
+      <div class="mi-ico">📢</div>
+      <div class="mi-text"><div class="mi-title">BROADCAST</div><div class="mi-desc">Kirim pengumuman ke user</div></div>
+      <div class="mi-arrow">›</div>
+    </a>
+    <a class="admin-menu-item" onclick="alert('Fitur segera hadir')">
+      <div class="mi-ico">⚙️</div>
+      <div class="mi-text"><div class="mi-title">PENGATURAN</div><div class="mi-desc">API, maintenance, backup</div></div>
+      <div class="mi-arrow">›</div>
+    </a>
+  </div>
+
+  <div class="section-title gold">DAFTAR USER</div>
+  <div class="table-user" id="userTable">
+    <div class="user-row">
+      <div class="u-avatar">👑</div>
+      <div class="u-info"><div class="u-name">LEXZY DEV</div><div class="u-meta">ADMIN · Owner</div></div>
+      <div class="u-status aktif">AKTIF</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;">
+    <button class="btn-logout" onclick="doLogout()">LOGOUT</button>
+  </div>
+
+  <div class="bottom-nav gold" style="margin-top:20px;">
+    <a class="nav-item active"><span class="ico">📊</span>DASH</a>
+    <a class="nav-item" onclick="alert('Kelola User')"><span class="ico">👥</span>USER</a>
+    <a class="nav-item" onclick="alert('Broadcast')"><span class="ico">📢</span>BROADCAST</a>
+    <a class="nav-item" onclick="alert('Pengaturan')"><span class="ico">⚙️</span>SETTING</a>
+  </div>
+</div>
+
+<script>
+  /* ============================================
+     KONFIGURASI
+     ============================================ */
+  const BUILTIN_USERS = [
+    { username: "Lexzy Dev", password: "lexzy123",  role: "admin" },
+    { username: "Lexzy",     password: "lexzyreal", role: "admin" },
+    { username: "Killua",    password: "killua123", role: "user" }
+  ];
+  const STORAGE_USERS = 'killua_registered_users';
+  const STORAGE_SESSION = 'killua_user';
+
+  /* ============================================
+     HELPER
+     ============================================ */
+  function getRegisteredUsers() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_USERS) || '[]');
+    } catch (e) { return []; }
+  }
+
+  function saveRegisteredUsers(arr) {
+    localStorage.setItem(STORAGE_USERS, JSON.stringify(arr));
+  }
+
+  function getAllUsers() {
+    const reg = getRegisteredUsers().map(u => ({
+      username: u.username,
+      password: u.password,
+      role: u.role || 'user'
+    }));
+    return [...BUILTIN_USERS, ...reg];
+  }
+
+  /* ============================================
+     PAGE NAVIGATION
+     ============================================ */
+  function hideAll() {
+    document.getElementById('pageLogin').style.display = 'none';
+    document.getElementById('pageRegister').style.display = 'none';
+    document.getElementById('panelUser').classList.remove('active');
+    document.getElementById('panelAdmin').classList.remove('active');
+  }
+
+  function showLogin() {
+    hideAll();
+    document.getElementById('pageLogin').style.display = 'flex';
+  }
+
+  function showRegister() {
+    hideAll();
+    document.getElementById('pageRegister').style.display = 'flex';
+    document.getElementById('regUser').value = '';
+    document.getElementById('regPass').value = '';
+    document.getElementById('regPass2').value = '';
+    document.getElementById('regMsg').className = 'msg';
+  }
+
+  function showUserPanel() {
+    hideAll();
+    document.getElementById('panelUser').classList.add('active');
+    switchUserPage('u-home');
+  }
+
+  function showAdminPanel() {
+    hideAll();
+    document.getElementById('panelAdmin').classList.add('active');
+    renderAdmin();
+  }
+
+  function switchUserPage(id) {
+    document.querySelectorAll('#panelUser .sub-page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('#navUser .nav-item').forEach(n => {
+      n.classList.toggle('active', n.dataset.u === id);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('#navUser .nav-item').forEach(n => {
+    n.addEventListener('click', () => switchUserPage(n.dataset.u));
+  });
+
+  /* ============================================
+     LOGIN
+     ============================================ */
+  function doLogin() {
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value;
+    const msg = document.getElementById('loginMsg');
+    const btn = document.getElementById('btnLogin');
+
+    if (!u || !p) {
+      msg.className = 'msg err';
+      msg.textContent = 'Username & password wajib diisi!';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.classList.add('loading');
+    btn.textContent = 'MEMPROSES';
+
+    setTimeout(() => {
+      const users = getAllUsers();
+      const found = users.find(x => x.username === u && x.password === p);
+
+      if (found) {
+        msg.className = 'msg ok';
+        msg.textContent = 'Login berhasil!';
+
+        localStorage.setItem(STORAGE_SESSION, JSON.stringify({
+          username: found.username,
+          role: found.role,
+          loginAt: Date.now()
+        }));
+
+        setTimeout(() => {
+          if (found.role === 'admin') {
+            showAdminPanel();
+          } else {
+            showUserPanel();
+            setUserData(found.username);
+          }
+          btn.disabled = false;
+          btn.classList.remove('loading');
+          btn.textContent = 'MASUK';
+          msg.className = 'msg';
+        }, 500);
+      } else {
+        msg.className = 'msg err';
+        msg.textContent = 'Username atau password salah!';
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'MASUK';
+      }
+    }, 500);
+  }
+
+  /* ============================================
+     REGISTER
+     ============================================ */
+  function doRegister() {
+    const u = document.getElementById('regUser').value.trim();
+    const p = document.getElementById('regPass').value;
+    const p2 = document.getElementById('regPass2').value;
+    const msg = document.getElementById('regMsg');
+    const btn = document.getElementById('btnReg');
+
+    if (!u || !p || !p2) {
+      msg.className = 'msg err'; msg.textContent = 'Semua kolom wajib diisi!'; return;
+    }
+    if (u.length < 3) {
+      msg.className = 'msg err'; msg.textContent = 'Username minimal 3 karakter!'; return;
+    }
+    if (p.length < 6) {
+      msg.className = 'msg err'; msg.textContent = 'Password minimal 6 karakter!'; return;
+    }
+    if (p !== p2) {
+      msg.className = 'msg err'; msg.textContent = 'Password tidak sama!'; return;
+    }
+    if (BUILTIN_USERS.find(x => x.username.toLowerCase() === u.toLowerCase())) {
+      msg.className = 'msg err'; msg.textContent = 'Username sudah dipakai!'; return;
+    }
+    const reg = getRegisteredUsers();
+    if (reg.find(x => x.username.toLowerCase() === u.toLowerCase())) {
+      msg.className = 'msg err'; msg.textContent = 'Username sudah dipakai!'; return;
+    }
+
+    btn.disabled = true;
+    btn.classList.add('loading');
+    btn.textContent = 'MENDAFTAR';
+
+    setTimeout(() => {
+      reg.push({
+        username: u,
+        password: p,
+        role: 'user',
+        registeredAt: Date.now()
+      });
+      saveRegisteredUsers(reg);
+
+      msg.className = 'msg ok';
+      msg.textContent = '✓ Pendaftaran berhasil! Silakan login.';
+      btn.textContent = 'BERHASIL';
+
+      setTimeout(() => {
+        showLogin();
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.textContent = 'DAFTAR';
+      }, 1500);
+    }, 600);
+  }
+
+  /* ============================================
+     SET USER DATA (untuk panel user)
+     ============================================ */
+  function setUserData(username) {
+    document.getElementById('uHeaderName').textContent = username.toUpperCase();
+    document.getElementById('uInfoUsername').textContent = username;
+    document.getElementById('uProfileName').textContent = username.toUpperCase();
+    document.getElementById('uProfileUsername').textContent = username;
+  }
+
+  /* ============================================
+     LOGOUT
+     ============================================ */
+  function doLogout() {
+    if (!confirm('Yakin mau logout?')) return;
+    localStorage.removeItem(STORAGE_SESSION);
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginMsg').className = 'msg';
+    showLogin();
+  }
+
+  /* ============================================
+     BUG TOOL
+     ============================================ */
+  function log(msg, cls = 'log-info') {
+    const box = document.getElementById('logBox');
+    if (!box) return;
+    const line = document.createElement('div');
+    line.className = cls;
+    const time = new Date().toLocaleTimeString('id-ID', { hour12: false });
+    line.textContent = `[${time}] ${msg}`;
+    box.appendChild(line);
+    box.scrollTop = box.scrollHeight;
+    while (box.children.length > 80) box.removeChild(box.firstChild);
+  }
+
+  async function runBug() {
+    const target = document.getElementById('bugTarget').value.trim();
+    const method = document.getElementById('bugMethod').value;
+    const amount = parseInt(document.getElementById('bugAmount').value) || 1;
+
+    if (!target) { log('[!] Target belum diisi.', 'log-err'); return; }
+
+    const btn = document.getElementById('btnBugRun');
+    btn.disabled = true;
+    btn.textContent = 'MEMPROSES...';
+
+    log(`[*] Metode: ${method}`, 'log-warn');
+    log(`[*] Target: ${target}`, 'log-warn');
+    log(`[*] Jumlah: ${amount}`, 'log-warn');
+
+    await new Promise(r => setTimeout(r, 400));
+    log('[*] Menghubungkan ke server...', 'log-info');
+
+    for (let i = 1; i <= amount; i++) {
+      await new Promise(r => setTimeout(r, 500));
+      log(`[+] #${i} Terkirim ke ${target} (${method})`, 'log-ok');
+    }
+
+    log(`[*] Selesai. ${amount} eksekusi terkirim.`, 'log-warn');
+    btn.disabled = false;
+    btn.textContent = 'EKSEKUSI';
+  }
+
+  /* ============================================
+     ADMIN — RENDER USER LIST
+     ============================================ */
+  function renderAdmin() {
+    const session = JSON.parse(localStorage.getItem(STORAGE_SESSION) || 'null');
+    if (session) {
+      document.getElementById('aHeaderName').textContent = session.username.toUpperCase();
+    }
+
+    const reg = getRegisteredUsers();
+    const total = reg.length + 1; // +1 untuk admin
+    document.getElementById('aTotalUsers').textContent = total;
+    document.getElementById('aTotalAktif').textContent = total;
+    document.getElementById('aStatTotal').textContent = total;
+
+    const table = document.getElementById('userTable');
+    table.innerHTML = `
+      <div class="user-row">
+        <div class="u-avatar">👑</div>
+        <div class="u-info"><div class="u-name">LEXZY DEV</div><div class="u-meta">ADMIN · Owner</div></div>
+        <div class="u-status aktif">AKTIF</div>
+      </div>
+    `;
+
+    reg.forEach(u => {
+      const row = document.createElement('div');
+      row.className = 'user-row';
+      row.innerHTML = `
+        <div class="u-avatar">👤</div>
+        <div class="u-info"><div class="u-name">${u.username.toUpperCase()}</div><div class="u-meta">${(u.role || 'user').toUpperCase()} · Terdaftar</div></div>
+        <div class="u-status aktif">AKTIF</div>
+      `;
+      table.appendChild(row);
+    });
+  }
+
+  /* ============================================
+     AUTO-CHECK SESSION SAAT LOAD
+     ============================================ */
+  (function checkSession() {
+    const session = JSON.parse(localStorage.getItem(STORAGE_SESSION) || 'null');
+    if (session) {
+      if (session.role === 'admin') {
+        showAdminPanel();
+      } else {
+        showUserPanel();
+        setUserData(session.username);
+      }
+    } else {
+      showLogin();
+    }
+  })();
+
+  /* ============================================
+     ENTER KEY
+     ============================================ */
+  document.getElementById('loginPass').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doLogin();
+  });
+  document.getElementById('loginUser').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doLogin();
+  });
+  document.getElementById('regPass2').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doRegister();
+  });
+</script>
+
+</body>
+</html>
